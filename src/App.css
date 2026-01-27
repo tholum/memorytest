@@ -1,38 +1,354 @@
-.App {
+* {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  padding: 20px;
+  background: #008080;
+  font-family: 'MS Sans Serif', 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  min-height: 100vh;
+}
+
+.app {
+  max-width: 600px;
+  margin: 0 auto;
   text-align: center;
 }
 
-.App-logo {
-  height: 40vmin;
-  pointer-events: none;
+h1 {
+  color: #ffffff;
+  text-shadow: 2px 2px 0 #000000;
+  margin-bottom: 20px;
 }
 
-@media (prefers-reduced-motion: no-preference) {
-  .App-logo {
-    animation: App-logo-spin infinite 20s linear;
-  }
+/* Controls */
+.controls {
+  background: #c0c0c0;
+  border: 3px solid;
+  border-color: #ffffff #808080 #808080 #ffffff;
+  padding: 15px;
+  margin-bottom: 20px;
 }
 
-.App-header {
-  background-color: #282c34;
-  min-height: 100vh;
+.settings {
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+  align-items: center;
+}
+
+.setting {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.setting label {
+  font-weight: bold;
+}
+
+.setting select {
+  padding: 5px 10px;
+  font-size: 14px;
+  background: #ffffff;
+  border: 2px solid;
+  border-color: #808080 #ffffff #ffffff #808080;
+}
+
+/* Buttons */
+.btn {
+  padding: 8px 20px;
+  font-size: 14px;
+  font-weight: bold;
+  cursor: pointer;
+  background: #c0c0c0;
+  border: 3px solid;
+  border-color: #ffffff #808080 #808080 #ffffff;
+}
+
+.btn:hover {
+  background: #d4d4d4;
+}
+
+.btn:active {
+  border-color: #808080 #ffffff #ffffff #808080;
+}
+
+.btn-start {
+  margin-top: 10px;
+}
+
+/* Timer */
+.timer-display {
   display: flex;
   flex-direction: column;
   align-items: center;
+  gap: 5px;
+}
+
+.timer-label {
+  font-weight: bold;
+  font-size: 16px;
+}
+
+.timer-value {
+  font-size: 32px;
+  font-weight: bold;
+  color: #000080;
+}
+
+/* Input phase */
+.input-controls {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 15px;
+}
+
+.input-label {
+  font-weight: bold;
+}
+
+/* Grid */
+.grid {
+  display: inline-grid;
+  gap: 2px;
+  background: #808080;
+  border: 3px solid;
+  border-color: #808080 #ffffff #ffffff #808080;
+  padding: 3px;
+  margin: 0 auto;
+}
+
+/* Cell */
+.cell {
+  width: 30px;
+  height: 30px;
+  border: 2px solid;
+  border-color: #ffffff #808080 #808080 #ffffff;
+  background: #c0c0c0;
+  cursor: pointer;
+  padding: 0;
+  outline: none;
+  touch-action: manipulation;
+  -webkit-tap-highlight-color: transparent;
+  user-select: none;
+  -webkit-user-select: none;
+}
+
+.cell:hover:not(.disabled):not(.selected):not(.pattern) {
+  background: #d4d4d4;
+}
+
+.cell:active:not(.disabled) {
+  border-color: #808080 #ffffff #ffffff #808080;
+}
+
+.cell.disabled {
+  cursor: default;
+}
+
+/* Pattern display (memorize phase) */
+.cell.pattern {
+  background: #000080;
+  border-color: #808080 #ffffff #ffffff #808080;
+}
+
+/* User selection (input phase) */
+.cell.selected {
+  background: #000080;
+  border-color: #808080 #ffffff #ffffff #808080;
+}
+
+/* Results states */
+.cell.correct {
+  background: #00aa00;
+  border-color: #808080 #ffffff #ffffff #808080;
+}
+
+.cell.missed {
+  background: #cc0000;
+  border-color: #808080 #ffffff #ffffff #808080;
+}
+
+.cell.wrong {
+  background: #cccc00;
+  border-color: #808080 #ffffff #ffffff #808080;
+}
+
+/* Exploded cell (landmine mode) */
+.cell.exploded {
+  background: #ff0000;
+  border-color: #808080 #ffffff #ffffff #808080;
+  cursor: default;
+  display: flex;
+  align-items: center;
   justify-content: center;
-  font-size: calc(10px + 2vmin);
-  color: white;
+  animation: explode 0.3s ease-out;
 }
 
-.App-link {
-  color: #61dafb;
+.mine {
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }
 
-@keyframes App-logo-spin {
-  from {
-    transform: rotate(0deg);
+@keyframes explode {
+  0% {
+    transform: scale(1);
+    background: #ff0000;
   }
-  to {
-    transform: rotate(360deg);
+  50% {
+    transform: scale(1.2);
+    background: #ffff00;
   }
+  100% {
+    transform: scale(1);
+    background: #ff0000;
+  }
+}
+
+/* Checkbox setting */
+.checkbox-setting label {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  cursor: pointer;
+}
+
+.checkbox-setting input[type="checkbox"] {
+  width: 16px;
+  height: 16px;
+  cursor: pointer;
+  accent-color: #000080;
+}
+
+/* Results overlay */
+.results-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(0, 0, 0, 0.5);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 100;
+}
+
+.results-modal {
+  background: #c0c0c0;
+  border: 3px solid;
+  border-color: #ffffff #808080 #808080 #ffffff;
+  padding: 25px;
+  max-width: 400px;
+  width: 90%;
+}
+
+.results-modal h2 {
+  margin: 0 0 20px 0;
+  text-align: center;
+  color: #000080;
+}
+
+.accuracy {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  margin-bottom: 20px;
+}
+
+.accuracy-value {
+  font-size: 48px;
+  font-weight: bold;
+  color: #000080;
+}
+
+.accuracy-label {
+  font-size: 14px;
+  color: #404040;
+}
+
+.breakdown {
+  display: flex;
+  justify-content: space-around;
+  margin-bottom: 20px;
+}
+
+.stat {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 10px;
+  min-width: 70px;
+}
+
+.stat-value {
+  font-size: 24px;
+  font-weight: bold;
+}
+
+.stat-label {
+  font-size: 12px;
+  color: #404040;
+}
+
+.stat.correct .stat-value {
+  color: #006600;
+}
+
+.stat.missed .stat-value {
+  color: #990000;
+}
+
+.stat.wrong .stat-value {
+  color: #999900;
+}
+
+/* Legend */
+.legend {
+  background: #ffffff;
+  border: 2px solid;
+  border-color: #808080 #ffffff #ffffff #808080;
+  padding: 10px;
+  margin-bottom: 20px;
+  font-size: 12px;
+}
+
+.legend-item {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-bottom: 5px;
+}
+
+.legend-item:last-child {
+  margin-bottom: 0;
+}
+
+.legend-color {
+  width: 16px;
+  height: 16px;
+  border: 1px solid #808080;
+}
+
+.legend-color.correct {
+  background: #00aa00;
+}
+
+.legend-color.missed {
+  background: #cc0000;
+}
+
+.legend-color.wrong {
+  background: #cccc00;
+}
+
+/* Result buttons */
+.result-buttons {
+  display: flex;
+  gap: 10px;
+  justify-content: center;
 }
